@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navigation, startDestination = Ruta.loginScreen.path,
                     builder = {
                       composable(Ruta.loginScreen.path){
-                          loginScreen(loginViewModel)
+                          loginScreen(loginViewModel, navigation)
                       }
                         composable(Ruta.registroScreen.path){
                             registroScreen()

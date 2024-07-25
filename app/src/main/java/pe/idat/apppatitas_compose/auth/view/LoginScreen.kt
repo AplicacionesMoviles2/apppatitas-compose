@@ -27,11 +27,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -46,19 +49,24 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import pe.idat.apppatitas_compose.R
 import pe.idat.apppatitas_compose.auth.viewmodel.LoginViewModel
+import pe.idat.apppatitas_compose.core.ruteo.Ruta
 
 @Composable
-fun loginScreen(loginViewModel: LoginViewModel){
-    Scaffold {
+fun loginScreen(loginViewModel: LoginViewModel, navController: NavController){
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+    Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState)}) {
         paddingInit ->
         Box(modifier = Modifier
             .fillMaxSize()
             .padding(paddingInit)){
             cabeceraLogin(Modifier.align(Alignment.TopEnd))
             formularioLogin(Modifier.align(Alignment.Center), loginViewModel)
-            pieLogin(Modifier.align(Alignment.BottomCenter))
+            pieLogin(Modifier.align(Alignment.BottomCenter), navController)
         }
     }
 }
@@ -142,7 +150,7 @@ fun cabeceraLogin(modifier: Modifier){
         modifier = modifier.clickable { activity.finish() })
 }
 @Composable
-fun pieLogin(modifier: Modifier){
+fun pieLogin(modifier: Modifier, navController: NavController){
     Column(modifier = modifier.fillMaxWidth()) {
         HorizontalDivider(
             modifier = Modifier
@@ -151,16 +159,16 @@ fun pieLogin(modifier: Modifier){
                 .fillMaxWidth()
         )
         Spacer(modifier = Modifier.size(20.dp))
-        registroLogin()
+        registroLogin(navController)
         Spacer(modifier = Modifier.size(20.dp))
     }
 }
 @Composable
-fun registroLogin(){
+fun registroLogin(navController: NavController){
     Row(Modifier.fillMaxWidth(), horizontalArrangement =  Arrangement.Center) {
         Text(text = "¿No tienes cuenta?  ", fontSize = 12.sp, color = Color(0xFF21338D))
         Text(text = "  Registrate Aquí", fontSize = 12.sp, color = Color(0xFF21338D),
-            modifier = Modifier.clickable {  },
+            modifier = Modifier.clickable { navController.navigate(Ruta.registroScreen.path) },
             fontWeight = FontWeight.Bold)
     }
 }
