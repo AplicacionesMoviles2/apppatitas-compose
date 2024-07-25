@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -50,6 +51,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 import pe.idat.apppatitas_compose.R
 import pe.idat.apppatitas_compose.auth.viewmodel.LoginViewModel
 import pe.idat.apppatitas_compose.core.ruteo.Ruta
@@ -65,16 +67,19 @@ fun loginScreen(loginViewModel: LoginViewModel, navController: NavController){
             .fillMaxSize()
             .padding(paddingInit)){
             cabeceraLogin(Modifier.align(Alignment.TopEnd))
-            formularioLogin(Modifier.align(Alignment.Center), loginViewModel)
+            formularioLogin(Modifier.align(Alignment.Center),
+                loginViewModel, snackbarHostState, navController)
             pieLogin(Modifier.align(Alignment.BottomCenter), navController)
         }
     }
 }
 
 @Composable
-fun formularioLogin(modifier: Modifier, loginViewModel: LoginViewModel){
+fun formularioLogin(modifier: Modifier, loginViewModel: LoginViewModel,
+                    state: SnackbarHostState, navController: NavController){
     val usuario: String by loginViewModel.usuario.observeAsState(initial = "")
     val password: String by loginViewModel.password.observeAsState(initial = "")
+    val botonHabilitado: Boolean by loginViewModel.botonLoginHabilitado.observeAsState(initial = false)
     Column(modifier = modifier.padding(start = 5.dp, end = 5.dp)) {
         imagenLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.size(4.dp))
@@ -82,7 +87,7 @@ fun formularioLogin(modifier: Modifier, loginViewModel: LoginViewModel){
         Spacer(modifier = Modifier.size(4.dp))
         txtpassword(password = password) { loginViewModel.onLoginValueChanged(usuario, it) }
         Spacer(modifier = Modifier.size(4.dp))
-        loginButton(loginViewModel = loginViewModel)
+        loginButton(botonHabilitado, loginViewModel, state, navController)
     }
     
 }
@@ -125,13 +130,25 @@ fun txtpassword(password: String, onTextChanged: (String) -> Unit) {
 }
 
 @Composable
-fun loginButton(loginViewModel: LoginViewModel){
+fun loginButton(botonHabilitado: Boolean, loginViewModel: LoginViewModel,
+                state: SnackbarHostState, navController: NavController){
+    val loginResponse by loginViewModel.loginResponse.observeAsState()
     val scope = rememberCoroutineScope()
-    Button(onClick = {
-        
-    },
+    Button(enabled = botonHabilitado,
+        onClick = { loginViewModel.login() },
         modifier = Modifier.fillMaxWidth()) {
         Text(text = "INGRESAR")
+    }
+    loginResponse?.let {
+        response ->
+        if(response.rpta){
+            navController.navigate(Ruta.homeScreen.path)
+        }else{
+            scope.launch {
+                state.showSnackbar("Login fallido: ${response.mensaje}",
+                    actionLabel = "OK", duration = SnackbarDuration.Short)
+            }
+        }
     }
 }
 
