@@ -1,4 +1,5 @@
 package pe.idat.apppatitas_compose.auth.data.network.request
 
-class LoginRequest {
-}
+data class LoginRequest(
+    var usuario: String,
+    var password: String)
