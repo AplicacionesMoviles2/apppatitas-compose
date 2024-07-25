@@ -1,4 +1,7 @@
 package pe.idat.apppatitas_compose.core.ruteo
 
-class Ruta {
+sealed class Ruta(val path: String) {
+    object loginScreen : Ruta("loginScreen")
+    object registroScreen : Ruta("registroScreen")
+    object homeScreen : Ruta("homeScreen")
 }

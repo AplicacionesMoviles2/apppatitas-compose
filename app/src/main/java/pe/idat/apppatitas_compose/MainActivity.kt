@@ -12,9 +12,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import pe.idat.apppatitas_compose.auth.view.loginScreen
+import pe.idat.apppatitas_compose.auth.view.registroScreen
 import pe.idat.apppatitas_compose.auth.viewmodel.LoginViewModel
+import pe.idat.apppatitas_compose.core.ruteo.Ruta
+import pe.idat.apppatitas_compose.home.view.homeScreen
 import pe.idat.apppatitas_compose.ui.theme.ApppatitascomposeTheme
 
 @AndroidEntryPoint
@@ -27,7 +33,19 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ApppatitascomposeTheme {
-                loginScreen(loginViewModel)
+                val navigation = rememberNavController()
+                NavHost(navController = navigation, startDestination = Ruta.loginScreen.path,
+                    builder = {
+                      composable(Ruta.loginScreen.path){
+                          loginScreen(loginViewModel)
+                      }
+                        composable(Ruta.registroScreen.path){
+                            registroScreen()
+                        }
+                        composable(Ruta.homeScreen.path){
+                            homeScreen()
+                        }
+                    })
             }
         }
     }

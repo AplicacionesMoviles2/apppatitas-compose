@@ -157,7 +157,7 @@ fun pieLogin(modifier: Modifier){
 }
 @Composable
 fun registroLogin(){
-    Row(Modifier.fillMaxSize(), horizontalArrangement =  Arrangement.Center) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement =  Arrangement.Center) {
         Text(text = "¿No tienes cuenta?  ", fontSize = 12.sp, color = Color(0xFF21338D))
         Text(text = "  Registrate Aquí", fontSize = 12.sp, color = Color(0xFF21338D),
             modifier = Modifier.clickable {  },
