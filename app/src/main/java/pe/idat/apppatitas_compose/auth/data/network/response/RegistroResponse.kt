@@ -1,4 +1,6 @@
 package pe.idat.apppatitas_compose.auth.data.network.response
 
-class RegistroResponse {
-}
+data class RegistroResponse(
+    var rpta: Boolean,
+    var mensaje: String
+)
