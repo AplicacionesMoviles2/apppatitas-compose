@@ -3,12 +3,16 @@ package pe.idat.apppatitas_compose.auth.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Key
@@ -63,6 +67,7 @@ fun registroScreen(
                 .fillMaxSize()
         ) {
             cabeceraRegistro()
+            formularioRegistro(registroViewModel, snackbarHostState, navController)
         }
     }
 }
@@ -79,6 +84,44 @@ fun cabeceraRegistro() {
                 .height(100.dp)
         )
         Text(text = "REGISTRAR PERSONA", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+    }
+}
+
+@Composable
+fun formularioRegistro(registroViewModel: RegistroViewModel,
+                       hostState: SnackbarHostState,
+                       navController: NavController){
+    val nombre: String by registroViewModel.nombres.observeAsState(initial = "")
+    val apellido: String by registroViewModel.apellidos.observeAsState(initial = "")
+    val email: String by registroViewModel.email.observeAsState(initial = "")
+    val celular: String by registroViewModel.celular.observeAsState(initial = "")
+    val usuario: String by registroViewModel.usuario.observeAsState(initial = "")
+    val password: String by registroViewModel.password.observeAsState(initial = "")
+    Column(
+        Modifier
+            .padding(start = 5.dp, end = 5.dp)
+            .verticalScroll(rememberScrollState())) {
+        txtNombreReg(nombre) { registroViewModel.onRegistroChanged(it, apellido, email,
+            celular, usuario, password) }
+        Spacer(modifier = Modifier.size(4.dp))
+        txtApellidoReg(apellido) { registroViewModel.onRegistroChanged(nombre, it, email,
+            celular, usuario, password) }
+        Spacer(modifier = Modifier.size(4.dp))
+        txtEmailReg(email) { registroViewModel.onRegistroChanged(nombre, apellido, it,
+            celular, usuario, password) }
+        Spacer(modifier = Modifier.size(4.dp))
+        txtCelularReg(celular) { registroViewModel.onRegistroChanged(nombre, apellido, email,
+            it, usuario, password) }
+        Spacer(modifier = Modifier.size(4.dp))
+        txtUsuarioReg(usuario) { registroViewModel.onRegistroChanged(nombre, apellido, email,
+            celular, it, password) }
+        Spacer(modifier = Modifier.size(4.dp))
+        txtPasswordReg(password) { registroViewModel.onRegistroChanged(nombre, apellido, email,
+            celular, usuario, it) }
+        Spacer(modifier = Modifier.size(4.dp))
+        registroButton(registroViewModel,hostState)
+        Spacer(modifier = Modifier.size(4.dp))
+        irLoginButton(navController)
     }
 }
 
