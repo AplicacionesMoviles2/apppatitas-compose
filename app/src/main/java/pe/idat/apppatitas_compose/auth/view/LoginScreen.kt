@@ -139,7 +139,7 @@ fun loginButton(botonHabilitado: Boolean, loginViewModel: LoginViewModel,
         modifier = Modifier.fillMaxWidth()) {
         Text(text = "INGRESAR")
     }
-    loginResponse?.let {
+    loginResponse?.getContentNotChange()?.let {
         response ->
         if(response.rpta){
             navController.navigate(Ruta.homeScreen.path)
