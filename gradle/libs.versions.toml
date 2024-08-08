@@ -16,6 +16,7 @@ org-jetbrains-kotlin-android = "1.8.0"
 converterGson = "2.9.0"
 hiltAndroid = "2.48"
 coilCompose = "2.0.0"
+roomRuntime = "2.6.1"
 
 
 [libraries]
@@ -41,6 +42,9 @@ hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltA
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 coil-compose = {module = "io.coil-kt:coil-compose", version.ref="coilCompose"}
+androidx-room-compiler = {module = "androidx.room:room-compiler", version.ref="roomRuntime"}
+androidx-room-ktx = {module = "androidx.room:room-ktx", version.ref="roomRuntime"}
+androidx-room-runtime = {module = "androidx.room:room-runtime", version.ref="roomRuntime"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
