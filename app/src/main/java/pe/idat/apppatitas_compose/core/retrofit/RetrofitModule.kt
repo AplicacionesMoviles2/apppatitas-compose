@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import pe.idat.apppatitas_compose.auth.data.network.retrofitclient.PatitasClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -25,7 +24,7 @@ class RetrofitModule {
 
     @Singleton
     @Provides
-    fun providePatitasClient(retrofit: Retrofit): PatitasClient{
+    fun providePatitasClient(retrofit: Retrofit): PatitasClient {
         return retrofit.create(PatitasClient::class.java)
     }
 
