@@ -22,6 +22,7 @@ import pe.idat.apppatitas_compose.auth.viewmodel.LoginViewModel
 import pe.idat.apppatitas_compose.auth.viewmodel.RegistroViewModel
 import pe.idat.apppatitas_compose.core.ruteo.Ruta
 import pe.idat.apppatitas_compose.home.view.homeScreen
+import pe.idat.apppatitas_compose.home.viewmodel.HomeViewModel
 import pe.idat.apppatitas_compose.ui.theme.ApppatitascomposeTheme
 
 @AndroidEntryPoint
@@ -29,6 +30,7 @@ class MainActivity : ComponentActivity() {
 
     private val loginViewModel: LoginViewModel by viewModels()
     private val registroViewModel: RegistroViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +47,7 @@ class MainActivity : ComponentActivity() {
                             registroScreen(registroViewModel, navigation)
                         }
                         composable(Ruta.homeScreen.path){
-                            homeScreen()
+                            homeScreen(homeViewModel)
                         }
                     })
             }

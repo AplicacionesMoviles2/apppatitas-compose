@@ -38,21 +38,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
+import pe.idat.apppatitas_compose.core.ruteo.Ruta
 import pe.idat.apppatitas_compose.core.utils.MenuItem
+import pe.idat.apppatitas_compose.home.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun homeScreen() {
+fun homeScreen(homeViewModel: HomeViewModel) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
+    val navController = rememberNavController()
     ModalNavigationDrawer(drawerState = drawerState,
         drawerContent = {
-            drawerContent(items = opcionesMenu(), onItemClick = {
-                item -> coroutineScope.launch {
+            drawerContent(items = opcionesMenu(), onItemClick = { item ->
+                coroutineScope.launch {
                     drawerState.close()
-            }})
-
+                }
+                when (item.titulo) {
+                    "Mascotas Perdidas" -> navController.navigate(Ruta.mascotaScreen.path)
+                    "Voluntario" -> navController.navigate(Ruta.voluntarioScreen.path)
+                }
+            })
         },
         content = {
             Column {
@@ -70,23 +80,29 @@ fun homeScreen() {
                             Icon(Icons.Default.Menu, contentDescription = "Menu")
                         }
                     })
+                NavHost(navController = navController,
+                    startDestination = Ruta.mascotaScreen.path) {
+                    composable(Ruta.mascotaScreen.path){ mascotaScreen(homeViewModel) }
+                    composable(Ruta.voluntarioScreen.path){ voluntarioScreen() }
+                }
             }
         })
 }
+
 @Composable
 fun drawerContent(
     items: List<MenuItem>,
     onItemClick: (MenuItem) -> Unit
-){
+) {
     Column(
         Modifier
             .fillMaxSize()
             .background(Color.White)
-            .systemBarsPadding()) {
+            .systemBarsPadding()
+    ) {
         cabeceraMenu()
         Spacer(modifier = Modifier.height(8.dp))
-        items.forEach{
-            item ->
+        items.forEach { item ->
             drawerMenuItem(item, onItemClick)
         }
     }
