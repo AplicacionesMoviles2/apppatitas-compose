@@ -9,12 +9,16 @@ import kotlinx.coroutines.launch
 import pe.idat.apppatitas_compose.auth.data.network.request.LoginRequest
 import pe.idat.apppatitas_compose.auth.data.network.response.LoginResponse
 import pe.idat.apppatitas_compose.auth.domain.LoginUseCase
+import pe.idat.apppatitas_compose.auth.domain.RegistroPersonaUseCase
+import pe.idat.apppatitas_compose.core.bd.PersonaEntity
 import pe.idat.apppatitas_compose.core.utils.Event
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase) : ViewModel() {
+    private val loginUseCase: LoginUseCase,
+    private val registroPersonaUseCase: RegistroPersonaUseCase)
+    : ViewModel() {
 
     private val _usuario = MutableLiveData<String>()
     val usuario : LiveData<String> = _usuario
@@ -37,6 +41,12 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             val response = loginUseCase(LoginRequest(usuario.value!!, password.value!!))
             _loginResponse.value = Event(response)
+            registroPersonaUseCase(PersonaEntity(
+                response.idpersona.toInt(),
+                response.nombres, response.apellidos,
+                response.email, response.celular,
+                response.usuario, response.password,
+                response.esvoluntario))
         }
     }
 }
