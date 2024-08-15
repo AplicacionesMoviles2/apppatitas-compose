@@ -99,7 +99,7 @@ fun homeScreen(homeViewModel: HomeViewModel,
                 NavHost(navController = navController,
                     startDestination = Ruta.mascotaScreen.path) {
                     composable(Ruta.mascotaScreen.path){ mascotaScreen(homeViewModel) }
-                    composable(Ruta.voluntarioScreen.path){ voluntarioScreen() }
+                    composable(Ruta.voluntarioScreen.path){ voluntarioScreen(homeViewModel) }
                 }
             }
         })

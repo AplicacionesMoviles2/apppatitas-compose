@@ -1,5 +1,6 @@
 package pe.idat.apppatitas_compose.home.view
 
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,17 +19,22 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import pe.idat.apppatitas_compose.home.viewmodel.HomeViewModel
 
 @Composable
-fun voluntarioScreen() {
-
+fun voluntarioScreen(homeViewModel: HomeViewModel) {
+    val persona by homeViewModel.persona.observeAsState()
     val snackbarHostState = remember {
         SnackbarHostState()
     }
@@ -40,15 +46,24 @@ fun voluntarioScreen() {
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            cabeceraVoluntario()
-            Spacer(modifier = Modifier.height(10.dp))
-            formularioVoluntario()
+            persona?.let {
+                value ->
+                if(value.esvoluntario == "1"){
+                    cabeceraVoluntario("Gracias por ser parte de nuestro equipo")
+                }else{
+                    cabeceraVoluntario("¡UNETE A NOSOTROS!")
+                    Spacer(modifier = Modifier.height(10.dp))
+                    formularioVoluntario(homeViewModel, snackbarHostState)
+                }
+            }
+
+
         }
     }
 }
 
 @Composable
-fun cabeceraVoluntario() {
+fun cabeceraVoluntario(texto : String) {
     Column(
         Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -59,22 +74,26 @@ fun cabeceraVoluntario() {
                 .width(100.dp)
                 .height(100.dp)
         )
-        Text(text = "¡UNETE A NOSOTROS!",
+        Text(text = texto,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold)
     }
 }
 
 @Composable
-fun formularioVoluntario(){
+fun formularioVoluntario(homeViewModel: HomeViewModel,
+                         state: SnackbarHostState){
+    var isChecked by remember {
+        mutableStateOf(false)
+    }
     Column(
         Modifier
             .fillMaxWidth()
             .padding(start = 8.dp, end = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
         lblTerminosCondiciones()
-        cbTerminosCondiciones()
-        btnRegistrarVoluntario()
+        cbTerminosCondiciones(isChecked) {isChecked = it}
+        btnRegistrarVoluntario(isChecked, homeViewModel, state)
     }
 }
 
@@ -85,9 +104,9 @@ fun lblTerminosCondiciones(){
 }
 
 @Composable
-fun cbTerminosCondiciones(){
+fun cbTerminosCondiciones(isChecked: Boolean, onCheckedChange: (Boolean)-> Unit){
     Row {
-        Checkbox(checked = false, onCheckedChange = { it })
+        Checkbox(checked = isChecked, onCheckedChange = { onCheckedChange(it) })
         Spacer(modifier = Modifier.width(5.dp))
         Text(text = "Aceptar términos y condiciones", Modifier.padding(top = 12.dp),
             fontSize = 12.sp)
@@ -95,8 +114,10 @@ fun cbTerminosCondiciones(){
 }
 
 @Composable
-fun btnRegistrarVoluntario(){
-    Button(onClick = { /*TODO*/ }, Modifier.fillMaxWidth()) {
+fun btnRegistrarVoluntario(isEnabled: Boolean,
+                           homeViewModel: HomeViewModel,
+                           state: SnackbarHostState){
+    Button(onClick = { /*TODO*/ }, Modifier.fillMaxWidth(), enabled = isEnabled) {
         Text(text = "Registrar Voluntario")
     }
 }
