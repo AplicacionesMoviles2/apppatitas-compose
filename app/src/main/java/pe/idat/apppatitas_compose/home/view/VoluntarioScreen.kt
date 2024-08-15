@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
 import pe.idat.apppatitas_compose.home.viewmodel.HomeViewModel
 
 @Composable
@@ -117,7 +120,24 @@ fun cbTerminosCondiciones(isChecked: Boolean, onCheckedChange: (Boolean)-> Unit)
 fun btnRegistrarVoluntario(isEnabled: Boolean,
                            homeViewModel: HomeViewModel,
                            state: SnackbarHostState){
-    Button(onClick = { /*TODO*/ }, Modifier.fillMaxWidth(), enabled = isEnabled) {
+    val voluntarioResponse by homeViewModel.voluntarioResponse.observeAsState()
+    val scope = rememberCoroutineScope()
+    Button(onClick = {
+        homeViewModel.registrarVoluntario()
+    },
+        Modifier.fillMaxWidth(),
+        enabled = isEnabled) {
         Text(text = "Registrar Voluntario")
+    }
+    voluntarioResponse?.let {
+        value ->
+        scope.launch {
+            state.showSnackbar(
+                value.mensaje,
+                actionLabel = "OK",
+                duration = SnackbarDuration.Short
+            )
+        }
+
     }
 }

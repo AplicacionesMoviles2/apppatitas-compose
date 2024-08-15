@@ -24,7 +24,7 @@ interface PatitasClient {
     @GET("mascotaperdida.php")
     suspend fun listarMascota(): Response<List<MascotaResponse>>
 
-    @PUT("personavoluntario.php")
+    @POST("personavoluntaria.php")
     suspend fun registrarVoluntario(@Body voluntarioRequest: VoluntarioRequest):
             Response<VoluntarioResponse>
 }

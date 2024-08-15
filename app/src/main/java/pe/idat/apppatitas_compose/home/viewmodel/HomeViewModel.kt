@@ -28,8 +28,6 @@ class HomeViewModel @Inject constructor(
 
     private val _mascotaResponse = MutableLiveData<List<MascotaResponse>>()
     val mascotaResponse: LiveData<List<MascotaResponse>> = _mascotaResponse
-    private val _idpersona = MutableLiveData<Int>()
-    val idpersona : LiveData<Int> = _idpersona
     private val _voluntarioResponse = MutableLiveData<VoluntarioResponse>()
     val voluntarioResponse : LiveData<VoluntarioResponse> = _voluntarioResponse
     val persona : LiveData<PersonaEntity> = obtenerPersonaUseCase()
@@ -55,7 +53,7 @@ class HomeViewModel @Inject constructor(
     fun registrarVoluntario(){
         viewModelScope.launch {
             val response = voluntarioUseCase(
-                VoluntarioRequest(idpersona.value!!)
+                VoluntarioRequest(persona.value!!.id)
             )
             _voluntarioResponse.value = response
             if(response.rpta){
